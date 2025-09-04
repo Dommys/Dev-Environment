@@ -21,33 +21,4 @@ ingress:
         - path: /
           pathType: Prefix
 YAML:
-# dev-app-chart/values.dev.yaml
-env:
-  - name: CHOKIDAR_USEPOLLING
-    value: "true"
-  - name: CHOKIDAR_INTERVAL
-    value: "250"
-    
-# argocd-app-dev.yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: web-dev
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/Dommys/Dev-Environment.git
-    targetRevision: main           # or the exact branch name (e.g., master)
-    path: dev-app-chart            # <— THIS is the chart folder
-    helm:
-      valueFiles:
-        - values.dev.yaml          # relative to the chart path above
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: dev
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
 
