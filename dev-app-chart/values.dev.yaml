@@ -12,13 +12,13 @@ service:
   type: ClusterIP
   port: 5173
 
+# Optional: improve file watching in k8s
+env:
+  - name: CHOKIDAR_USEPOLLING
+    value: "true"
+  - name: CHOKIDAR_INTERVAL
+    value: "250"
+
 ingress:
-  enabled: true
-  className: nginx
-  hosts:
-    - host: dev-app.localtest.me
-      paths:
-        - path: /
-          pathType: Prefix
-YAML:
+  enabled: false
 

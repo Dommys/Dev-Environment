@@ -121,3 +121,22 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# dev-app-chart/values.yaml (safe defaults)
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+container:
+  port: 80
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+

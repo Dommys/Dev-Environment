@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "dev-app-chart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ default 1 .Values.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "dev-app-chart.name" . }}
@@ -16,19 +16,14 @@ spec:
         app.kubernetes.io/name: {{ include "dev-app-chart.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- $containerPort := dig "container" "port" 80 .Values -}}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
-          {{- if .Values.command }}
-          command: {{- toYaml .Values.command | nindent 10 }}
-          {{- end }}
-          {{- if .Values.args }}
-          args: {{- toYaml .Values.args | nindent 10 }}
-          {{- end }}
+          image: "{{ dig "image" "repository" "nginx" .Values }}:{{ dig "image" "tag" "latest" .Values }}"
+          imagePullPolicy: {{ dig "image" "pullPolicy" "IfNotPresent" .Values }}
           ports:
             - name: http
-              containerPort: {{ .Values.container.port }}
+              containerPort: {{ $containerPort }}
           {{- with .Values.env }}
           env:
             {{- toYaml . | nindent 12 }}

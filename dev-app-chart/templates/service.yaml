@@ -5,11 +5,13 @@ metadata:
   labels:
     {{- include "dev-app-chart.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  {{- $containerPort := dig "container" "port" 80 .Values -}}
+  {{- $svcPort := dig "service" "port" $containerPort .Values -}}
+  type: {{ default "ClusterIP" .Values.service.type }}
   ports:
     - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.container.port }}
+      port: {{ $svcPort }}
+      targetPort: {{ $containerPort }}
       protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "dev-app-chart.name" . }}
