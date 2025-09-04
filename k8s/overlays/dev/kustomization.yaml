@@ -1,0 +1,7 @@
+namePrefix: dev-
+namespace: dev
+resources:
+  - ../../base
+patchesStrategicMerge:
+  - dev-patch.yaml
+

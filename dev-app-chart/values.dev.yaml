@@ -1,0 +1,30 @@
+image:
+  repository: dev-app
+  tag: dev
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+container:
+  port: 5173
+
+service:
+  type: ClusterIP
+  port: 5173
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: dev-app.localtest.me
+      paths:
+        - path: /
+          pathType: Prefix
+YAML:
+# dev-app-chart/values.dev.yaml
+env:
+  - name: CHOKIDAR_USEPOLLING
+    value: "true"
+  - name: CHOKIDAR_INTERVAL
+    value: "250"
+

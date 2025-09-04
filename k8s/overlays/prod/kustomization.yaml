@@ -1,0 +1,7 @@
+namePrefix: prod-
+namespace: prod
+resources:
+  - ../../base
+# No patches needed; base already matches your prod config:
+# image bestiee/vue-app:latest, replicas 2, Service type LoadBalancer on port 80
+

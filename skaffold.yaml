@@ -1,0 +1,46 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: dev-app
+
+build:
+  local:
+    push: false
+    useBuildkit: true
+  artifacts:
+    - image: dev-app
+      context: .
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: "src/**/*.vue"
+            dest: "/app/src"
+          - src: "src/**/*.js"
+            dest: "/app/src"
+          - src: "vite.config.js"
+            dest: "/app/"
+
+deploy:
+  helm:
+    releases:
+      - name: web-dev
+        chartPath: dev-app-chart
+        namespace: dev
+        valuesFiles:
+          - dev-app-chart/values.dev.yaml
+        # IMPORTANT: use underscores in the image var names
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_dev_app}}"
+          image.tag: "{{.IMAGE_TAG_dev_app}}"
+
+portForward:
+  - resourceType: service
+    namespace: dev
+    # Set this to the **actual service name** rendered by your chart.
+    # If your Helm "fullname" helper returns just the release name, this can be "web-dev".
+    # Otherwise, run:  kubectl -n dev get svc  and copy the exact name here.
+    resourceName: dev-vue-app-service
+    port: 5173
+    localPort: 5173
+

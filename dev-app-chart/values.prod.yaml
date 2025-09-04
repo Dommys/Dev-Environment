@@ -1,0 +1,17 @@
+image:
+  repository: bestiee/vue-app
+  tag: latest            # consider pinning later
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+container:
+  port: 80
+
+service:
+  type: LoadBalancer     # matches your prod style
+  port: 80
+
+ingress:
+  enabled: false         # or enable + set a real host if you prefer Ingress
+

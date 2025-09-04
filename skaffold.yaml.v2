@@ -1,0 +1,37 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata: { name: dev-app }
+build:
+  local:
+    push: false
+    useBuildkit: true
+  artifacts:
+    - image: dev-app
+      context: .
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: "src/**/*.vue"
+            dest: "/app/src"
+          - src: "src/**/*.js"
+            dest: "/app/src"
+          - src: "vite.config.js"
+            dest: "/app/"
+manifests:
+  helm:
+    releases:
+      - name: web-dev
+        chartPath: dev-app-chart
+        namespace: dev
+        valuesFiles: ["values.dev.yaml"]
+        setValues:
+          image.repository: dev-app
+          image.tag: dev
+portForward:
+  - resourceType: service
+    namespace: dev
+    resourceName: web-dev
+    port: 5173
+    localPort: 5173
+

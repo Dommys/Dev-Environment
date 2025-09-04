@@ -1,0 +1,36 @@
+.
+├── dev-app-chart
+│   ├── charts
+│   ├── Chart.yaml
+│   ├── .helmignore
+│   ├── templates
+│   │   ├── deployment.yaml
+│   │   ├── _helpers.tpl
+│   │   ├── hpa.yaml
+│   │   ├── ingress.yaml
+│   │   ├── NOTES.txt
+│   │   ├── serviceaccount.yaml
+│   │   ├── service.yaml
+│   │   └── tests
+│   │       └── test-connection.yaml
+│   └── values.yaml
+├── dev-app.yaml
+├── Dockerfile
+├── .gitignore
+├── index.html
+├── jsconfig.json
+├── package.json
+├── package-lock.json
+├── project-tree.txt
+├── public
+│   └── favicon.ico
+├── README.md
+├── src
+│   ├── App.vue
+│   └── main.js
+├── vite.config.js
+└── .vscode
+    ├── extensions.json
+    └── settings.json
+
+8 directories, 26 files
