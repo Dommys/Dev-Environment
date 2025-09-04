@@ -16,14 +16,13 @@ spec:
         app.kubernetes.io/name: {{ include "dev-app-chart.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- $containerPort := dig "container" "port" 80 .Values -}}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ dig "image" "repository" "nginx" .Values }}:{{ dig "image" "tag" "latest" .Values }}"
-          imagePullPolicy: {{ dig "image" "pullPolicy" "IfNotPresent" .Values }}
+          image: "{{ default "nginx" .Values.image.repository }}:{{ default "latest" .Values.image.tag }}"
+          imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ $containerPort }}
+              containerPort: {{ default 80 .Values.container.port }}
           {{- with .Values.env }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -33,15 +32,10 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            httpGet: { path: "/", port: http }
             initialDelaySeconds: 2
             periodSeconds: 5
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            httpGet: { path: "/", port: http }
             initialDelaySeconds: 10
             periodSeconds: 10
-
