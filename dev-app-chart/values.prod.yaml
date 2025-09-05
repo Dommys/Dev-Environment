@@ -14,4 +14,17 @@ service:
 
 ingress:
   enabled: false         # or enable + set a real host if you prefer Ingress
+  # ...your existing prod values...
+extraContainers:
+  - name: api
+    image: yourrepo/your-api:1.0.0
+    ports:
+      - name: api
+        containerPort: 3000
+service:
+  port: 80
+  extraPorts:
+    - name: api
+      port: 3000
+
 

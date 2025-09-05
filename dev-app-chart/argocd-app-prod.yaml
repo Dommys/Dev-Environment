@@ -9,6 +9,8 @@ spec:
     repoURL: https://github.com/Dommys/Dev-Environment.git
     targetRevision: main
     path: dev-app-chart
+    spec:
+    	syncPolicy: {}
     helm:
       valueFiles:
         - values.prod.yaml

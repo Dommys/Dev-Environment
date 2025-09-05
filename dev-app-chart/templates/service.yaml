@@ -11,7 +11,14 @@ spec:
       port: {{ default 80 .Values.service.port }}
       targetPort: {{ default 80 .Values.container.port }}
       protocol: TCP
+    {{- range .Values.service.extraPorts }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ default .port .targetPort }}
+      protocol: {{ default "TCP" .protocol }}
+    {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "dev-app-chart.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+
 

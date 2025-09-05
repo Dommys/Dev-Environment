@@ -22,3 +22,17 @@ env:
 ingress:
   enabled: false
 
+# ...your existing dev values...
+extraContainers:
+  - name: api
+    image: node:20-alpine
+    command: ["sh","-lc","node -e \"require('http').createServer((_,r)=>r.end('OK')).listen(3000,'0.0.0.0')\""]
+    ports:
+      - name: api
+        containerPort: 3000
+service:
+  port: 5173          # existing front-end port
+  extraPorts:
+    - name: api
+      port: 3000
+

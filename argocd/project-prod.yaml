@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: prod
+  namespace: argocd
+spec:
+  # Only allow this repo (add more if needed)
+  sourceRepos:
+    - https://github.com/<you>/<repo>.git
+
+  # Only allow deploying to the prod namespace in this cluster
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: prod
+
+  # Require commits to be signed by one of these keys to sync
+  signatureKeys:
+    - keyID: "<YOUR_GPG_KEY_ID>"
