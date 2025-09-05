@@ -1,6 +1,6 @@
 image:
-  repository: dev-app
-  tag: dev
+  repository: bestiee/dev-app
+  tag: "d0d8308d3388b708451a6afe057b4cd416d4a6be"
   pullPolicy: IfNotPresent
 
 replicaCount: 1
