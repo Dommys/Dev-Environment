@@ -1,6 +1,6 @@
 image:
   repository: bestiee/vue-app
-  tag: latest            # consider pinning later
+  tag: prod            # consider pinning later
   pullPolicy: IfNotPresent
 
 replicaCount: 2
