@@ -1,6 +1,6 @@
 image:
   repository: bestiee/vue-app
-  tag: "f4f4276608e50daec3e3a74caa7d63b72e56d331"
+  tag: "d3f2744f42258c8bb5522172e4f41448e24eaff1"
   pullPolicy: IfNotPresent
 
 replicaCount: 2
