@@ -1,0 +1,54 @@
+name: dev-deploy
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  build-and-bump:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPO: bestiee/dev-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & push (tag = SHA + dev)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.dev
+          push: true
+          tags: |
+            ${{ env.IMAGE_REPO }}:${{ github.sha }}
+            ${{ env.IMAGE_REPO }}:dev
+
+      - name: Bump values.dev.yaml image repo & tag
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          TAG=${GITHUB_SHA}
+          yq -i '
+            .image.repository = env(IMAGE_REPO) |
+            .image.tag = env(TAG) |
+            .image.pullPolicy = "IfNotPresent"
+          ' dev-app-chart/values.dev.yaml || \
+          sed -i -e "s#^\(\s*repository:\s*\).*#\1${IMAGE_REPO}#" \
+                 -e "s#^\(\s*tag:\s*\).*#\1\"${TAG}\"#" \
+                 -e "s#^\(\s*pullPolicy:\s*\).*#\1IfNotPresent#" dev-app-chart/values.dev.yaml
+
+      - name: Commit & push the bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dev-app-chart/values.dev.yaml
+          git commit -m "dev: bump image to ${IMAGE_REPO}:${GITHUB_SHA}" || echo "No changes"
+          git push
