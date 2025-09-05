@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/Dommys/Dev-Environment.git
-    targetRevision: main           # or the exact branch name (e.g., master)
+    targetRevision: dev           # or the exact branch name (e.g., master)
     path: dev-app-chart            # <— THIS is the chart folder
     helm:
       valueFiles:
